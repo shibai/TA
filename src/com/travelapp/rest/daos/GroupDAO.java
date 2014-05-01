@@ -13,12 +13,11 @@ import com.travelapp.rest.beans.UserBean;
 
 public class GroupDAO {
 
-	// not tested
-	// add deleted test in sql
+	// tested
 	public GroupBean viewGroup (int groupId, Connection conn) {
 		Statement st = null;
 		ResultSet rs = null;
-		String sql = "select * from group where id = " + groupId;
+		String sql = "select * from `group` where deleted<>1 and id = " + groupId;
 		GroupBean gb = new GroupBean();
 		
 		try {
@@ -44,14 +43,14 @@ public class GroupDAO {
 		return gb;
 	}
 	
-	// not tested
+	// tested
 	public UserBean[] viewMembers (int groupId, Connection conn) {
 		Statement st = null;
 		ResultSet rs = null;
 		String sql = "select user.id, user.email, user.firstName, user.lastName, user.address, user.city, user.state, user.zipcode, user.country"
 				+ ", user.type, user.phone, user.url"
-				+ " from group, user, groupUser"
-				+ " where user.id = groupUser.userId and groupUser.groupID = " + groupId;
+				+ " from `group` g, user, groupUser"
+				+ " where g.deleted <> 1 and user.id = groupUser.userId and groupUser.groupID = " + groupId;
 		ArrayList<UserBean> userBeans = new ArrayList<UserBean>();
 		
 		try {
@@ -87,14 +86,16 @@ public class GroupDAO {
 		return ret;
 	}
 	
-	// not tested
+	// tested
 	public GroupBean createGroup (GroupBean gb, Connection conn) {
 		Statement st = null;
 		ResultSet rs = null;
 
-		String sql = "insert into group(name, userId, city, state, country, type, content) values('" + gb.getName() + "', '" + gb.getUserId()
-				+ "', '" + gb.getCity() + "', '" + gb.getState() + "', '" + gb.getCountry() 
+		String sql = "insert into `group`(name, userId, city, `state`, country, type, content) values('" + gb.getName() + "', " + gb.getUserId()
+				+ ", '" + gb.getCity() + "', '" + gb.getState() + "', '" + gb.getCountry() + "', '"
 				+ gb.getType() + "', '" + gb.getContent() + "')";
+		
+		System.out.println(sql);
 		
 		try {
 			st = conn.createStatement();
@@ -104,10 +105,13 @@ public class GroupDAO {
 				System.out.println("insert to group unsuccessful");
 			}else {
 				// get the unique id of last inserted row
-				sql = "select_last_insert_id()";
+				sql = "select last_insert_id()";
 				rs = st.executeQuery(sql);
 				if (rs.next()) {
-					gb.setId(rs.getInt("id"));
+					gb.setId(rs.getInt("last_insert_id()"));
+					
+					// insert new entry into groupUser table
+					addUser(gb.getUserId(),gb.getId(),conn);
 				}
 			}
 		} catch (SQLException e) {
@@ -117,6 +121,7 @@ public class GroupDAO {
 	}
 	
 	// add user to group
+	// tested
 	public boolean addUser (int uid, int gid, Connection conn) {
 		Statement st = null;
 		String sql = "insert into groupUser(groupId,userId) values(" + gid + "," + uid + ")";
@@ -138,9 +143,10 @@ public class GroupDAO {
 	}
 	
 	// edit a group
+	// tested
 	public GroupBean editGroup (GroupBean gb, Connection conn) {
 		Statement st = null;
-		String sql = "update group set userId = " + gb.getUserId() + ",name='" + gb.getName() + "',type='" + gb.getType() +"',city='" 
+		String sql = "update `group` set userId = " + gb.getUserId() + ",name='" + gb.getName() + "',type='" + gb.getType() +"',city='" 
 		+ gb.getCity() + "',state='" + gb.getState() + "',country='" + gb.getCountry() + "',content='" + gb.getContent() + "' where id=" + gb.getId();
 		
 		try {
@@ -159,7 +165,7 @@ public class GroupDAO {
 	
 	// remove a user from a group
 	// set 'deleted' to 0 in table groupUser
-	// TODO: might have to make a few changes in any group/user related functions 
+	// tested
 	public boolean removeUser (int uid, int gid, Connection conn) {
 		Statement st = null;
 		String sql = "update groupUser set deleted=1 where userId=" + uid + " and groupId=" + gid;
@@ -183,7 +189,7 @@ public class GroupDAO {
 	// TODO: might have to make a few changes in any group related functions 
 	public boolean deleteGroup (int gid, Connection conn) {
 		Statement st = null;
-		String sql = "update group set deleted=1 where groupId=" + gid;
+		String sql = "update `group` set deleted=1 where id=" + gid;
 		boolean flag = false;
 		
 		try {
