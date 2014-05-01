@@ -91,7 +91,7 @@ public class UserService {
 			return null;
 		}
 		
-		//delete user
+		//delete user pass
 		@POST
 		@Path("delete")
 		@Produces(MediaType.APPLICATION_JSON)
@@ -101,7 +101,7 @@ public class UserService {
 			return up.deleteUser(userid);
 		}
 		
-		//search user
+		//search user pass
 		@GET
 		@Path("search")
 		@Produces(MediaType.APPLICATION_JSON)

@@ -64,8 +64,9 @@ public class UserDAO {
 	public boolean deleteUser(String userId) throws SQLException{
 		query = "delete from user where user.id  = " +  Integer.parseInt(userId);
 		st = conn.createStatement();
-		//st.executeQuery(query);	
-		return st.equals(query);
+		boolean delete = false;
+		if(st.executeUpdate(query)!=0){delete = true;}	
+		return delete;
 	}	
 	
 	//accept user
@@ -75,10 +76,16 @@ public class UserDAO {
 	
 	//login
 	public  boolean userLogin(String email,String password) throws SQLException{
-		query = "select email and password from user where user.email="
-				+ email + "and user.password = " + password;
+		query = "select * from user where user.email= \'"
+				+ email + "\' and user.password = \'" + password + "\'";
+		String query1= "select * from user where user.email= \'"
+				+ email + "\'";
 		st = conn.createStatement();
-		return st.execute(query);	
+		boolean login = false;
+		rs = st.executeQuery(query1);
+		if(rs.getRow()!=0){login = true;}
+		System.out.println(rs.getRow());
+		return login;	
 	}	
 	//sign out
 	public  boolean userSignout(String email,String password){
