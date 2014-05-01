@@ -16,10 +16,8 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.travelapp.rest.beans.GroupBean;
-import com.travelapp.rest.beans.UserBean;
 import com.travelapp.rest.processes.GroupProcess;
-
+import com.travelapp.rest.beans.*;
 
 
 
@@ -29,8 +27,8 @@ public class GroupService {
 	@GET
 	@Path("test")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String test() {
-		return "ttttttttttttt";
+	public String test(@QueryParam("groupId") String groupId) {
+		return groupId;
 	}
 
 	GroupProcess groupProcess = new GroupProcess();
