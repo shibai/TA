@@ -14,6 +14,7 @@ public class TripDAO {
 	Connection conn = JDBCConnection.connectDatabase();
 	Statement st = null;
 	ResultSet rs = null;
+	int flag;
 	String query ="";
 	TripBean trip = new TripBean();
 	
@@ -75,18 +76,18 @@ public class TripDAO {
 		return trips;
 	}
 	
-	public void createTrip(String name, String groupId, String from, String to,String startDate, String endDate,String content) throws SQLException {
+	public void createTrip(TripBean tb) throws SQLException {
 		// TODO Auto-generated method stub
 		query="insert into user(name, groupId, start_time,end_time,start_lc,end_lc,) values('"
-				+ name + "', '"
-				+ groupId + "', '" 
-				+ startDate + "', '" 
-				+ endDate + "', '" 
-				+ from + "', '" 
-			    + to + "', '" 
-				+ content + "')";
+				+ tb.getName() + "', '"
+				+ tb.getGroupId() + "', '" 
+				+ tb.getStartTime() + "', '" 
+				+ tb.getEndTime() + "', '" 
+				+ tb.getFrom() + "', '" 
+			    + tb.getTo() + "', '" 
+				+ tb.getEndTime() + "')";
 		 st = conn.createStatement();
-		 rs = st.executeQuery(query);
+		 flag = st.executeUpdate(query);
 		
 	}
 	

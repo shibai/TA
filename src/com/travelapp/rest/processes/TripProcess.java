@@ -12,8 +12,17 @@ public class TripProcess {
     public ArrayList<TripBean> listAllTripsByUserID(String userId) throws SQLException{
 		return trip.listAllTripsByUserID(userId);
 	}
-    public void createTrip(String name,String GropId,String From,String to,String StartDate,String EndDate,String content) throws SQLException{
-		trip.createTrip(name,GropId,From,to,StartDate,EndDate,content);
+    public  TripBean createTrip(String name,String GropId,String From,String to,String StartDate,String EndDate,String content) throws SQLException{
+    	TripBean tb = new TripBean();
+    	tb.setName(name);
+		tb.setGroupId(Integer.parseInt(GropId));
+		tb.setFrom(From);
+		tb.setTo(to);
+		tb.setStartTime(Integer.parseInt(StartDate));
+		tb.setEndTime(Integer.parseInt(EndDate));
+		tb.setContent(content);
+    	trip.createTrip(tb);
+    	return tb;
 	}
 	public boolean createItinerarye(){
 		trip.createItinerarye();

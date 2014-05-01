@@ -2,27 +2,56 @@ package com.travelapp.rest.processes;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import com.travelapp.rest.beans.GroupBean;
 import com.travelapp.rest.beans.UserBean;
 import com.travelapp.rest.daos.UserDAO;
 
 
 public class UserProcess {
 	//Connection conn = JDBCConnection.connectDatabase();
-	UserDAO ub = new UserDAO();
-	public void createUser(String email,String firstName,String lastName,String password,String address,String city, String zipcode,String state,String country,String phone,String type) throws SQLException{
-		ub.createUser(email, firstName, lastName, password, address, city, zipcode, state, country,phone,type);
+	UserDAO ud = new UserDAO();
+	
+	public UserBean createUser(String email,String firstName,String lastName,String password,String address,String city, String zipcode,String state,String country,String phone,String type,String url) throws SQLException{
+		UserBean ub = new UserBean();
+		ub.setEmail(email);
+		ub.setFirsName(firstName);
+		ub.setLastname(lastName);
+		ub.setPassword(password);
+		ub.setAddress(address);
+		ub.setCity(city);
+		ub.setZipcode(zipcode);
+		ub.setState(state);
+		ub.setCountry(country);
+		ub.setType(type);
+		ub.setUrl(url);
+		ub =ud.createUser(ub);
+		return ub;
 	}
-	public void editUser(UserBean user, String email,String firstName,String lastName, String password,String address,String city, String zipcode,String state,String country,String phone,String type) throws SQLException{
-		ub.edit(user, email, firstName, lastName, password, address, city, zipcode, state, country,phone);
+	public UserBean editUser(String email,String firstName,String lastName, String password,String address,String city, String zipcode,String state,String country,String phone,String type,String url) throws SQLException{
+		UserBean ub = new UserBean();
+		ub.setEmail(email);
+		ub.setFirsName(firstName);
+		ub.setLastname(lastName);
+		ub.setPassword(password);
+		ub.setAddress(address);
+		ub.setCity(city);
+		ub.setZipcode(zipcode);
+		ub.setState(state);
+		ub.setCountry(country);
+		ub.setType(type);
+		ub.setUrl(url);
+		ub =ud.edit(ub);
+		return ub;
 	}	
-	public void deleteUser(String userId) throws SQLException{
-		ub.deleteUser(userId);
+	public boolean deleteUser(String userId) throws SQLException{
+		
+		return ud.deleteUser(userId);
 	}	
 	public boolean acceptUser(String userId){
 		return false;
 	}	
-	public void userLogin(String email,String password) throws SQLException{
-		ub.userLogin(email, password);
+	public boolean userLogin(String email,String password) throws SQLException{
+		return ud.userLogin(email, password);
 	}	
 	public void userSignout(String email,String password){
 		
@@ -30,10 +59,11 @@ public class UserProcess {
 	
 	public UserBean searchUser(String userId) throws SQLException{
 		
-		return ub.searchUser(userId);
+		return ud.searchUser(userId);
 	}	
 	
 	public ArrayList<UserBean> listAllUsers() throws SQLException{
-		return ub.listAllUser();
+		
+		return ud.listAllUser();
 	}
 }

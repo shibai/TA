@@ -1,4 +1,7 @@
 package com.travelapp.rest.restservices;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -6,32 +9,36 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.travelapp.rest.beans.TripBean;
+import com.travelapp.rest.processes.TripProcess;
+
 @Path("/trip")
 public class TripService {
+	    TripProcess tp = new TripProcess();
 	    //create a trip
 		@POST
 		@Path("new")
 		@Produces(MediaType.APPLICATION_JSON)
-		public String createTrip(
+		public TripBean createTrip(
 		@QueryParam("id") String id,
+		@QueryParam("name") String name,
 		@QueryParam("groupId") String groupId,
 		@QueryParam("startTime") String startTime,
 		@QueryParam("endTime") String endTime,
 		@QueryParam("from") String from,
 		@QueryParam("to") String to,
-		@QueryParam("content") String content){
+		@QueryParam("content") String content) throws SQLException{
 		// TODO
 
-		return null;
+		return tp.createTrip(name, groupId, from, to, startTime, endTime, content);
 	    }
 	    //list trip by userId
 		@GET
 		@Path("list")
 		@Produces(MediaType.APPLICATION_JSON)
-		public String lsitTripByUserId(@QueryParam("userId") String userId){
+		public ArrayList<TripBean> lsitTripByUserId(@QueryParam("userId") String userId) throws SQLException{
 			// TODO
-
-			return null;
+           return tp.listAllTripsByUserID(userId);
 		}
 		/*Itinerary management
 		create new itinerary*/

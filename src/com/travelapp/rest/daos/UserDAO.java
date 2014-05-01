@@ -14,59 +14,58 @@ public class UserDAO {
 	Connection conn = JDBCConnection.connectDatabase();
 	Statement st = null;
 	ResultSet rs = null;
+	int flag;
 	String query ="";
-	UserBean ub = new UserBean();
+    UserBean ub = new UserBean();
 	
 	//create user
-	public void createUser(String email,String firstName,String lastName,String password,String address,String city, String zipcode,String state,String country,String phone,String type) throws SQLException{
+	public UserBean createUser(UserBean ub) throws SQLException{
 		query =  "insert into user(email, firstName, lastname,password,address,"
-				+ "city,state,zipcode,country,phone,type) values('"
-				+ email + "', '"
-				+ firstName + "', '" 
-				+ lastName + "', '" 
-				+ password + "', '" 
-				+ address + "', '" 
-			    + city + "', '" 
-				+ state  + "', '" 
-				+ zipcode + "', '" 
-				+ country + "', '"
-				+ phone + "', '"
-				+ type + "')";
+				+ "city,state,zipcode,country,phone,type,url) values('"
+				+ ub.getEmail() + "', '"
+				+ ub.getFirsName() + "', '" 
+				+ ub.getLastname() + "', '" 
+				+ ub.getPassword() + "', '" 
+				+ ub.getAddress() + "', '" 
+			    + ub.getCity() + "', '" 
+				+ ub.getState() + "', '" 
+				+ ub.getZipcode() + "', '" 
+				+ ub.getCountry() + "', '"
+				+ ub.getPhone() + "', '"
+				+ ub.getType() + "', '"
+				+ ub.getUrl() + "')";
 		 st = conn.createStatement();
-		 rs = st.executeQuery(query);
-		
+		 flag = st.executeUpdate(query);
+		 return ub;
 	}
 	
 	//edit user
-	public void edit(UserBean user, String email,String firstName,String lastName, String password,String address,String city, String zipcode,String state,String country,String phone) throws SQLException{
-		if(email.equals("")){email = user.getEmail();}
-		if(password.equals("")){password = user.getPassword();}
-		if(address.equals("")){address = user.getAddress();}
-		if(zipcode.equals("")){zipcode= user.getZipcode();}
-		if(state.equals("")){state = user.getState();}
-		if(country.equals("")){country = user.getCountry();}
-	    if(phone.equals("")){phone = user.getPhone();}
+	public  UserBean edit(UserBean ub) throws SQLException{
 		query = "update user set "
-				 +"email = "+ email
-				 +"firstName = "+ email
-				 +"lastName = "+ email
-				 +"password = "+ password
-				 +"address = "+ address
-				 +"zipcode = "+ zipcode
-				 +"state = "+ state
-				 +"country = "+ country
-				 +"phone = "+ phone
-				 +"where user.id = " + user.getId();
+				 +"email = "+ ub.getEmail()
+				 +"firstName = "+ ub.getFirsName()
+				 +"lastName = "+ ub.getLastname()
+				 +"password = "+ ub.getPassword()
+				 +"address = "+ ub.getAddress()
+				 +"zipcode = "+ ub.getZipcode()
+				 +"state = "+ ub.getState()
+				 +"country = "+ ub.getCountry()
+				 +"phone = "+ ub.getPhone()
+				 +"type = "+ ub.getType()
+				 +"url = "+ ub.getUrl()
+				 +"where user.id = " + ub.getId();
 		 st = conn.createStatement();
-		 rs = st.executeQuery(query);
+		 flag = st.executeUpdate(query);
+		 return ub;
 		
 	}	
 	
 	//delete user need protect
-	public void deleteUser(String userId) throws SQLException{
+	public boolean deleteUser(String userId) throws SQLException{
 		query = "delete from user where user.id  = " +  Integer.parseInt(userId);
 		st = conn.createStatement();
-		rs = st.executeQuery(query);	
+		//st.executeQuery(query);	
+		return st.equals(query);
 	}	
 	
 	//accept user
@@ -77,7 +76,7 @@ public class UserDAO {
 	//login
 	public  boolean userLogin(String email,String password) throws SQLException{
 		query = "select email and password from user where user.email="
-				+email + "and user.password =" + password;
+				+ email + "and user.password = " + password;
 		st = conn.createStatement();
 		return st.execute(query);	
 	}	
@@ -91,9 +90,9 @@ public class UserDAO {
 	public UserBean searchUser(String userId) throws SQLException{
 		
 		query = "select user.id, user.email, user.firstName, user.lastName, user.address, user.city, user.state, user.zipcode, user.country"
-				+ "from user"
+				+ " from user"
 				+ " where user.id = " + Integer.parseInt(userId);
-		
+	
 			 st = conn.createStatement();
 			 rs = st.executeQuery(query);
 			
@@ -102,7 +101,7 @@ public class UserDAO {
 				ub.setId(rs.getInt("id"));
 				ub.setEmail(rs.getString("email"));
 				ub.setFirsName(rs.getString("firstName"));
-				ub.setLastname(rs.getString("LasttName"));
+				ub.setLastname(rs.getString("LastName"));
 			 }
 		
 		return ub;

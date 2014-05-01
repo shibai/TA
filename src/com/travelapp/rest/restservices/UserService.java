@@ -1,4 +1,7 @@
 package com.travelapp.rest.restservices;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -6,58 +9,66 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.travelapp.rest.beans.UserBean;
+import com.travelapp.rest.processes.UserProcess;
+
 @Path("/user")
 public class UserService {
+	     
+	    UserProcess up = new UserProcess();
 		// create a new user
 		@POST
 		@Path("new")
 		@Produces(MediaType.APPLICATION_JSON)
-		public String createNewUser(
+		public UserBean createNewUser(
 			@QueryParam("email") String email,
 			@QueryParam("password") String password,
-			@QueryParam("firstname") String firstname,
-			@QueryParam("lastname") String lastname,
+			@QueryParam("firstName") String firstname,
+			@QueryParam("lastName") String lastname,
 			@QueryParam("address") String address,
-			@QueryParam("type") String type,
 			@QueryParam("city") String city,
 			@QueryParam("state") String state,
 			@QueryParam("zipcode") String zipcode,
 			@QueryParam("phone") String phone,
-			@QueryParam("country") String country) {
+			@QueryParam("country") String country,
+			@QueryParam("type") String type,
+			@QueryParam("url") String url) throws SQLException {
 			// TODO
-
-			return null;
+            
+			return up.createUser(email, firstname, lastname, password, address, city, zipcode, state, country, phone, type,url);
 		}
 		
 		// edit a user
 		@POST
 		@Path("edit")
 		@Produces(MediaType.APPLICATION_JSON)
-		public String editUser(
-			@QueryParam("email") String email,
-			@QueryParam("password") String password,
-			@QueryParam("firstname") String firstname,
-			@QueryParam("lastname") String lastname,
-			@QueryParam("address") String address,
-			@QueryParam("type") String type,
-			@QueryParam("city") String city,
-			@QueryParam("state") String state,
-			@QueryParam("zipcode") String zipcode,
-			@QueryParam("phone") String phone,
-			@QueryParam("country") String country) {
+		public UserBean editUser(
+				@QueryParam("email") String email,
+				@QueryParam("password") String password,
+				@QueryParam("firstName") String firstname,
+				@QueryParam("lastName") String lastname,
+				@QueryParam("address") String address,
+				@QueryParam("city") String city,
+				@QueryParam("state") String state,
+				@QueryParam("zipcode") String zipcode,
+				@QueryParam("phone") String phone,
+				@QueryParam("country") String country,
+				@QueryParam("type") String type,
+				@QueryParam("url") String url) throws SQLException {
 			// TODO
 
-			return null;
+			
+			return up.editUser(email, firstname, lastname, password, address, city, zipcode, state, country, phone, type, url);
 		}
 		
 		//login
 		@POST
 		@Path("login")
 		@Produces(MediaType.APPLICATION_JSON)
-		public String logIn(@QueryParam("email") String email,@QueryParam("password") String password){
+		public boolean logIn(@QueryParam("email") String email,@QueryParam("password") String password) throws SQLException{
 		   // TODO
 
-			return null;
+			return up.userLogin(email, password);
 		}
 		
 		//signout
@@ -84,29 +95,29 @@ public class UserService {
 		@POST
 		@Path("delete")
 		@Produces(MediaType.APPLICATION_JSON)
-		public String deleteUser(@QueryParam("userid") String userid){
+		public boolean deleteUser(@QueryParam("userid") String userid) throws SQLException{
 			// TODO
 
-			return null;
+			return up.deleteUser(userid);
 		}
 		
 		//search user
 		@GET
 		@Path("search")
 		@Produces(MediaType.APPLICATION_JSON)
-		public String searchUser(@QueryParam("userid") String userid){
+		public UserBean searchUser(@QueryParam("userid") String userid) throws SQLException{
 			// TODO
 
-			return null;
+			return up.searchUser(userid);
 		}
 		
 		//list user by type
 		@GET
 		@Path("list")
 		@Produces(MediaType.APPLICATION_JSON)
-		public String lsitUserBy(@QueryParam("type") String type){
+		public ArrayList<UserBean> lsitUserBy(@QueryParam("type") String type) throws SQLException{
 			// TODO
 
-			return null;
+			return up.listAllUsers();
 		}
 }
