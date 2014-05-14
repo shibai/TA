@@ -76,14 +76,13 @@ public class UserDAO {
 	
 	//login
 	public  boolean userLogin(String email,String password) throws SQLException{
-		query = "select * from user where user.email= \'"
-				+ email + "\' and user.password = \'" + password + "\'";
-		String query1= "select * from user where user.email= \'"
-				+ email + "\'";
+		query = "select * from user where user.email= '"
+				+ email + "' and user.password = '" + password + "'";
+		System.out.println(query);
 		st = conn.createStatement();
 		boolean login = false;
-		rs = st.executeQuery(query1);
-		if(rs.getRow()!=0){login = true;}
+		rs = st.executeQuery(query);
+		if(rs.isBeforeFirst()){login = true;}
 		System.out.println(rs.getRow());
 		return login;	
 	}	
@@ -102,7 +101,7 @@ public class UserDAO {
 	
 			 st = conn.createStatement();
 			 rs = st.executeQuery(query);
-			
+			 System.out.println(rs.getRow());
 			 while (rs.next()) {
 				
 				ub.setId(rs.getInt("id"));
@@ -117,19 +116,18 @@ public class UserDAO {
 	//list all user by type
 	public ArrayList<UserBean> listAllUser () throws SQLException {
 		
-		query = "select user.id, user.email, user.firstName, user.lastName, user.address, user.city, user.state, user.zipcode, user.country"
-				+ "from user";
+		query = "select user.id, user.email, user.firstName, user.lastName, user.address, user.city, user.state, user.zipcode, user.country from user";
 				
 		ArrayList<UserBean> users = new ArrayList<UserBean>();
 	
 			st = conn.createStatement();
 			rs = st.executeQuery(query);
-			
+			System.out.println(rs.getRow());
 			while (rs.next()) {
 				//ub.setId(rs.getInt("id"));
 				ub.setEmail(rs.getString("email"));
 				ub.setFirsName(rs.getString("firstName"));
-				ub.setLastname(rs.getString("LasttName"));
+				ub.setLastname(rs.getString("LastName"));
 				ub.setFirsName(rs.getString("firstName"));
 				ub.setLastname(rs.getString("zipcode"));
 				ub.setFirsName(rs.getString("city"));
